@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn RNN, NLTK & Model Outcomes</title>
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+
+  <!-- Vendor libraries via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" defer></script>
+
+  <!-- App scripts -->
+  <script src="js/main.js" defer></script>
+  <script src="js/rnn-animations.js" defer></script>
+  <script src="js/nltk-animations.js" defer></script>
+  <script src="js/outcomes-animations.js" defer></script>
+</head>
+<body>
+
+<!-- ============== HEADER / NAV ============== -->
+<header class="site-header">
+  <div class="brand">
+    <div class="brand-logo"></div>
+    <div class="brand-text">
+      <h1>Learn RNN, NLTK & Model Outcomes</h1>
+      <p>Recurrent Networks, NLTK &amp; Model Outcomes — explained visually</p>
+    </div>
+  </div>
+
+  <nav class="tab-nav" role="tablist">
+    <button class="tab-btn active" data-tab="rnn" role="tab">RNN</button>
+    <button class="tab-btn" data-tab="nltk" role="tab">NLTK</button>
+    <button class="tab-btn" data-tab="outcomes" role="tab">Model Outcomes</button>
+    <span class="tab-indicator" aria-hidden="true"></span>
+  </nav>
+</header>
+
+<main class="site-main">
+
+  <!-- ================================================================ -->
+  <!-- TAB 1: RNN                                                        -->
+  <!-- ================================================================ -->
+  <section class="tab-panel active" id="tab-rnn" role="tabpanel">
+
+    <!-- Section 1: What is an RNN? (non-math) -->
+    <section class="scene" id="rnn-intro" data-anim="rnn-intro">
+      <div class="scene-header">
+        <span class="section-tag">Section 1</span>
+        <h2>What is an RNN? <span class="muted">(no math yet)</span></h2>
+        <p class="lede">
+          An RNN is a neural network that reads <em>one word at a time</em> and keeps a tiny
+          "memory" of what it already read. Watch the reader below think as each word arrives.
+        </p>
+      </div>
+
+      <div class="stage">
+        <svg id="reader-stage" viewBox="0 0 900 320" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <div class="caption">
+        <strong>Intuition:</strong> the thought-bubble (hidden state) keeps updating.
+        Each new word combines with the old memory to form a new memory.
+      </div>
+    </section>
+
+    <!-- Section 2: Input flow -->
+    <section class="scene" id="rnn-input-flow" data-anim="rnn-input-flow">
+      <div class="scene-header">
+        <span class="section-tag">Section 2</span>
+        <h2>How a word becomes a vector</h2>
+        <p class="lede">
+          Computers don't understand "hello". We turn it into numbers in three steps.
+        </p>
+      </div>
+
+      <div class="stage">
+        <svg id="input-flow-stage" viewBox="0 0 900 260" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <div class="step-legend">
+        <div><span class="dot dot-blue"></span> Step 1 — Tokenize: the word gets an ID</div>
+        <div><span class="dot dot-purple"></span> Step 2 — Embed: the ID becomes a dense vector</div>
+        <div><span class="dot dot-pink"></span> Step 3 — Feed: the vector enters the RNN cell</div>
+      </div>
+    </section>
+
+    <!-- Section 3: Inside the RNN cell (with math) -->
+    <section class="scene" id="rnn-cell" data-anim="rnn-cell">
+      <div class="scene-header">
+        <span class="section-tag">Section 3</span>
+        <h2>Inside the RNN cell <span class="muted">(with math)</span></h2>
+        <p class="lede">
+          The cell mixes the new input with the previous memory, squashes the result,
+          and produces a new memory.
+        </p>
+      </div>
+
+      <div class="stage">
+        <svg id="cell-stage" viewBox="0 0 900 380" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <div class="formula-block">
+        <div class="formula" id="formula-ht">
+          h<sub>t</sub> = tanh( <span class="term term-wxh">W<sub>xh</sub> &middot; x<sub>t</sub></span>
+          + <span class="term term-whh">W<sub>hh</sub> &middot; h<sub>t-1</sub></span>
+          + <span class="term term-bh">b<sub>h</sub></span> )
+        </div>
+        <div class="formula" id="formula-yt">
+          y<sub>t</sub> = <span class="term term-why">W<sub>hy</sub> &middot; h<sub>t</sub></span>
+          + <span class="term term-by">b<sub>y</sub></span>
+        </div>
+      </div>
+
+      <div class="plain-english">
+        <div><b>W<sub>xh</sub> &middot; x<sub>t</sub></b> — "how much does the new word matter?"</div>
+        <div><b>W<sub>hh</sub> &middot; h<sub>t-1</sub></b> — "how much of the old memory do we keep?"</div>
+        <div><b>b<sub>h</sub></b> — "a small nudge so the cell isn't stuck at zero."</div>
+        <div><b>tanh(&hellip;)</b> — "squash the result between -1 and +1 so it doesn't explode."</div>
+        <div><b>y<sub>t</sub></b> — "turn the memory into a prediction."</div>
+      </div>
+    </section>
+
+    <!-- Section 4: Activation functions -->
+    <section class="scene" id="rnn-activations" data-anim="rnn-activations">
+      <div class="scene-header">
+        <span class="section-tag">Section 4</span>
+        <h2>Activation functions — the squashers</h2>
+        <p class="lede">
+          The dot slides along the input axis; the output follows the curve.
+          This is what "squashing" actually looks like.
+        </p>
+      </div>
+
+      <div class="activation-grid">
+        <div class="activation-card">
+          <h3>sigmoid</h3>
+          <svg class="act-plot" data-fn="sigmoid" viewBox="0 0 240 180"></svg>
+          <p class="muted small">Output in (0, 1). Great for gates.</p>
+        </div>
+        <div class="activation-card">
+          <h3>tanh</h3>
+          <svg class="act-plot" data-fn="tanh" viewBox="0 0 240 180"></svg>
+          <p class="muted small">Output in (-1, 1). Default in classic RNN.</p>
+        </div>
+        <div class="activation-card">
+          <h3>ReLU</h3>
+          <svg class="act-plot" data-fn="relu" viewBox="0 0 240 180"></svg>
+          <p class="muted small">Output in [0, &infin;). Rare in RNN — can blow up.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Unrolling -->
+    <section class="scene" id="rnn-unroll" data-anim="rnn-unroll">
+      <div class="scene-header">
+        <span class="section-tag">Section 5</span>
+        <h2>Unrolling through time</h2>
+        <p class="lede">
+          The same cell is reused at every time step. Below we draw it 5 times,
+          so you can see the hidden state flow forward.
+        </p>
+      </div>
+
+      <div class="stage">
+        <svg id="unroll-stage" viewBox="0 0 900 260" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+    </section>
+
+    <!-- Section 6: Vanishing gradient -->
+    <section class="scene" id="rnn-vanish" data-anim="rnn-vanish">
+      <div class="scene-header">
+        <span class="section-tag">Section 6</span>
+        <h2>The vanishing gradient — seen, not just told</h2>
+        <p class="lede">
+          During training, the "lesson" travels backward in time. In a plain RNN
+          it gets quieter at every step. In an LSTM the gate keeps it loud.
+        </p>
+      </div>
+
+      <div class="stage">
+        <div class="row-label">Plain RNN &mdash; gradient fades:</div>
+        <svg id="vanish-stage" viewBox="0 0 900 120" preserveAspectRatio="xMidYMid meet"></svg>
+
+        <div class="row-label">LSTM with gates &mdash; gradient survives:</div>
+        <svg id="lstm-stage" viewBox="0 0 900 120" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <div class="vanish-math">
+        <div class="formula small">
+          &part;h<sub>t</sub>/&part;h<sub>1</sub> = &prod; tanh&prime;(&middot;) &middot; W<sub>hh</sub>
+        </div>
+        <div class="counter-line">
+          Signal strength after <span id="vanish-steps">10</span> steps:
+          <span id="vanish-value" class="counter">1.0000</span>
+        </div>
+        <div class="caption">
+          <strong>In plain English:</strong> the further back we go, the quieter the lesson becomes.
+          The early words never learn that they mattered.
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- TAB 2: NLTK                                                       -->
+  <!-- ================================================================ -->
+  <section class="tab-panel" id="tab-nltk" role="tabpanel">
+    <section class="scene scene-flat">
+      <div class="scene-header">
+        <span class="section-tag">NLTK</span>
+        <h2>NLTK functions &mdash; what they do, what they output</h2>
+        <p class="lede">
+          NLTK is a Python toolkit for classical text processing. Below is a live, animated
+          tour of the most common functions used before feeding text to an RNN.
+        </p>
+      </div>
+
+      <div class="nltk-grid" id="nltk-grid">
+        <!-- Cards are rendered by nltk-animations.js -->
+      </div>
+    </section>
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- TAB 3: Model Outcomes                                             -->
+  <!-- ================================================================ -->
+  <section class="tab-panel" id="tab-outcomes" role="tabpanel">
+    <section class="scene scene-flat">
+      <div class="scene-header">
+        <span class="section-tag">Outcomes</span>
+        <h2>What each model actually produces</h2>
+        <p class="lede">
+          Four common sequence models, their strengths and weaknesses, their typical loss curves,
+          and a sample Shakespeare-style continuation from each. Numbers are illustrative.
+        </p>
+      </div>
+
+      <div class="outcomes-grid" id="outcomes-grid">
+        <!-- Cards rendered by outcomes-animations.js -->
+      </div>
+
+      <div class="outcomes-compare">
+        <h3>Illustrative comparison</h3>
+        <div class="compare-row">
+          <div class="compare-col">
+            <h4>Accuracy (higher is better)</h4>
+            <svg id="acc-bars" viewBox="0 0 420 220"></svg>
+          </div>
+          <div class="compare-col">
+            <h4>Training loss over epochs</h4>
+            <svg id="loss-curves" viewBox="0 0 420 220"></svg>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>Built with GSAP, anime.js &amp; D3 &middot; Pure HTML/CSS/JS &middot; Open <code>site/index.html</code> in any browser.</p>
+</footer>
+
+</body>
+</html>

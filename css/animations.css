@@ -1,0 +1,65 @@
+/* ===========================================================
+   RNN Visual Academy — Keyframes & Reusable Animations
+   =========================================================== */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { filter: drop-shadow(0 0 4px currentColor); }
+  50%      { filter: drop-shadow(0 0 14px currentColor); }
+}
+
+@keyframes dash {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.25; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-3px); }
+  75%      { transform: translateX(3px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Reusable utility classes */
+.anim-float { animation: floaty 3s ease-in-out infinite; }
+.anim-blink { animation: blink 1.2s ease-in-out infinite; }
+.anim-pulse { animation: pulseGlow 1.8s ease-in-out infinite; }
+
+.shimmer-text {
+  background: linear-gradient(90deg, #c5cdff 0%, #fff 50%, #c5cdff 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* SVG line draw helper */
+.draw-line {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: dash 1.4s ease forwards;
+}
+
+/* Scroll-in reveal (added by IntersectionObserver) */
+.scene { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.scene.visible { opacity: 1; transform: translateY(0); }
+
+/* Neuron node pulse (used inside SVGs via class) */
+.node-pulse { transform-origin: center; transform-box: fill-box; animation: pulseGlow 2s ease-in-out infinite; }
